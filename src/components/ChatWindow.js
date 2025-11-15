@@ -54,30 +54,41 @@ function ChatWindow({ conversation, onStatsUpdate }) {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const messageText = inputText;
     setInputText('');
     setIsTyping(true);
 
     try {
-      // Simulate bot response with delay
-      await axios.post(`${API_URL}/test/send`, {
-        recipient_id: testRecipientId,
-        message: inputText
+      // Send message to standalone chat endpoint (bypasses Instagram)
+      const response = await axios.post(`${API_URL}/chat`, {
+        user_id: testRecipientId,
+        message: messageText
       });
 
-      // Simulate receiving response (in real scenario, this would come via webhook)
-      setTimeout(() => {
-        const botMessage = {
-          id: Date.now() + 1,
-          text: 'This is a preview interface. In production, responses come from Instagram webhooks and OpenAI.',
-          sender: 'bot',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, botMessage]);
-        setIsTyping(false);
-      }, 2000);
+      // Simulate human-like typing delay
+      const typingDelayMs = (response.data.typing_delay || 2) * 1000;
+      await new Promise(resolve => setTimeout(resolve, typingDelayMs));
+
+      setIsTyping(false);
+
+      // Add bot's text response
+      const botMessage = {
+        id: Date.now() + 2,
+        text: response.data.response,
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, botMessage]);
 
     } catch (error) {
       console.error('Error sending message:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        text: '❌ Error: ' + (error.response?.data?.detail || error.message),
+        sender: 'bot',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorMessage]);
       setIsTyping(false);
     }
   };
@@ -149,9 +160,17 @@ function ChatWindow({ conversation, onStatsUpdate }) {
       <div className="messages-container">
         {messages.length === 0 && (
           <div className="welcome-message">
-            <h3>👋 Welcome to the Chatbot Admin Interface</h3>
-            <p>This is a preview/testing interface for your Instagram chatbot.</p>
-            <p>Messages from real Instagram users will be processed automatically via webhooks.</p>
+            <h3>👋 Welcome to Instagram Chatbot MVP</h3>
+            <p><strong>✨ Test the core features:</strong></p>
+            <ul style={{ textAlign: 'left', display: 'inline-block' }}>
+              <li>🧠 <strong>NLP Responses</strong> - Powered by OpenAI (human-like conversation)</li>
+              <li>⏱️ <strong>Typing Delays</strong> - Natural delays based on message length</li>
+              <li>🖼️ <strong>Image Triggers</strong> - Try keywords: "pricing", "catalog", "products"</li>
+              <li>🎵 <strong>Audio Triggers</strong> - Try keywords: "hello", "hi", "hey"</li>
+            </ul>
+            <p style={{ marginTop: '15px', fontSize: '14px', opacity: '0.8' }}>
+              💡 Type anything to start chatting! The bot will respond like a human.
+            </p>
           </div>
         )}
         
