@@ -1,12 +1,27 @@
 import React from 'react';
 import './Sidebar.css';
 
-function Sidebar({ stats }) {
+function Sidebar({ stats, currentView, onViewChange }) {
   return (
     <div className="sidebar">
       <div className="sidebar-header">
         <h1>📱 Instagram Bot</h1>
         <p className="subtitle">Admin Dashboard</p>
+      </div>
+
+      <div className="view-switcher">
+        <button 
+          className={`view-btn ${currentView === 'chat' ? 'active' : ''}`}
+          onClick={() => onViewChange('chat')}
+        >
+          💬 Chat
+        </button>
+        <button 
+          className={`view-btn ${currentView === 'settings' ? 'active' : ''}`}
+          onClick={() => onViewChange('settings')}
+        >
+          ⚙️ Settings
+        </button>
       </div>
 
       <div className="stats-section">
@@ -35,15 +50,15 @@ function Sidebar({ stats }) {
         </div>
         <div className="feature-item">
           <span className="feature-icon">⏱️</span>
-          <span>Human-like Delays</span>
+          <span>Smart Delays</span>
         </div>
         <div className="feature-item">
           <span className="feature-icon">🖼️</span>
-          <span>Media Responses</span>
+          <span>Image Triggers</span>
         </div>
         <div className="feature-item">
-          <span className="feature-icon">⚡</span>
-          <span>High Concurrency</span>
+          <span className="feature-icon">🎵</span>
+          <span>Voice Triggers</span>
         </div>
       </div>
 

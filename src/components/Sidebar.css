@@ -27,6 +27,38 @@
   text-align: center;
 }
 
+.view-switcher {
+  display: flex;
+  gap: 10px;
+  padding: 20px;
+  background: #1a0a2e;
+}
+
+.view-btn {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid #6245a5;
+  color: #b8a9d6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-btn:hover {
+  background: #2a1552;
+  color: white;
+}
+
+.view-btn.active {
+  background: linear-gradient(135deg, #361367 0%, #421780 100%);
+  color: white;
+  border-color: #4A8BC7;
+  box-shadow: 0 4px 12px rgba(74, 139, 199, 0.3);
+}
+
 .sidebar-header h1 {
   color: #ffffff;
   font-size: 24px;
